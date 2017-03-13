@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<link rel="icon"  href="icon.ico">
+	<title>日期属于第几周</title>
+	<style type="text/css">
+		div{
+			text-align: center;
+			margin-top: 50px;
+		}
+		h3,input,span{
+			font-family: '微软雅黑';
+		}
+		span{
+			color: red;
+		}
+	</style>
+</head>
+<body>
+	<div>
+		<h3>日期选择:</h3>
+		<input type="date">
+		<h3>判断结果：</h3>
+		<span id="myYear">N</span>年
+		<span id="myMonth">N</span>月
+		第<span id="myWeek">N</span>周
+	</div>
+	
+
+
+<script type="text/javascript" src="jquery-3.1.1.min.js"></script>
+<script type="text/javascript">
+	$('input').on('input propertychange',function(){
+		var weekNum,myMonth,myYear; //定义周数,月份,年份
+	    var pickDate    = $(this).val().split('-'); //获取日期选择后的日期
+		var year        = pickDate[0]; //获取当前日期年份
+		var month       = pickDate[1]; //获取当前日期月份
+	    var day         = pickDate[2]; //获取当前日期的几号  例如×月3号
+	    var date        = new Date(year,month-1,day);
+	    var dayOfWeek   = date.getDay();  //获取当前日期的星期几  例如星期一，则为1
+	    //判断当前日期是否为周日
+	    if (dayOfWeek == 0) {
+	    	dayOfWeek = 7;
+	    }
+	    //判断该日期是否归为上一个月
+	    if (Math.ceil((day - dayOfWeek + 1) / 7) <= 0) { 
+	    	//判断当前月份是否为1月，若是则年份减一，月份为12
+	    	if (month == 1) {
+	    		year2  = year - 1; 
+	    		month2 = 12;
+	    	}else{
+	    		year2  = year;
+	    		month2 = month - 1;
+	    	}
+	    	var date2 = new Date(year2,month2,0); 
+	    	var day2  = date2.getDate(); //获取上个月天数
+	    	var dayOfWeek2 = date2.getDay(); 
+	    	weekNum   = Math.ceil((day2 - dayOfWeek2 + 1) / 7);//计算上个月共多少周
+	    	myMonth   = month2;
+	    	myYear    = year2;
+	    }else{
+			weekNum   = Math.ceil((day - dayOfWeek + 1) / 7);
+	    	myMonth   = month;
+	    	myYear    = year;
+	    }
+
+	    //替换span内容
+	    $('#myYear').html(myYear);
+	    $('#myMonth').html(myMonth);
+	    $('#myWeek').html(weekNum); 
+	})
+</script>
+</body>
+</html>
